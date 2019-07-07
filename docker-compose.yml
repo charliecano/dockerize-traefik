@@ -37,7 +37,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ${USERDIR}/docker/traefik/config:/etc/traefik
       - ${USERDIR}/docker/traefik/acme:/etc/traefik/acme:rw
-      - ${USERDIR}/docker/shared:/shared
 
 networks:
   default:

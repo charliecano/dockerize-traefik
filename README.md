@@ -82,6 +82,12 @@ Coming soon ...
     domain = "mydomain.com"
     ```
 
+1.  Create the docker network.
+
+    ```sh
+    docker network create traefik_proxy
+    ```
+
 1.  Spin up the service.
 
     ```sh
