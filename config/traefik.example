@@ -1,0 +1,61 @@
+# debug = true
+
+logLevel = "ERROR" # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+InsecureSkipVerify = true
+defaultEntryPoints = ["https", "http"]
+
+#
+# Web interface of Traefik
+#
+[api]
+  entryPoint = "traefik"
+  dashboard = true
+  address = ":8080"
+
+#
+# Force HTTPS
+#
+[entryPoints]
+  [entryPoints.http]
+  address = ":80"
+    [entryPoints.http.redirect]
+    entryPoint = "https"
+  [entryPoints.https]
+  address = ":443"
+    [entryPoints.https.tls]
+
+#
+# Add'l configuration.
+# https://docs.traefik.io/configuration/backends/file/
+#
+# [file]
+#   watch = true
+#   filename = "/etc/traefik/rules.toml"
+
+#
+# Let's encrypt configuration
+#
+[acme]
+email = "admin@example.com" # <---- (REPLACE: with your email)
+storage = "/etc/traefik/acme/acme.json"
+entryPoint = "https"
+acmeLogging = true
+onDemand = false
+[acme.dnsChallenge]
+  provider = "cloudflare"
+  delayBeforeCheck = 300
+[[acme.domains]]
+  main = "example.com" # <---- (REPLACE: with your root domain)
+[[acme.domains]]
+  main = "*.example.com" # <---- (REPLACE: with your root domain *wildcard)
+
+#
+# Connection to docker host system (docker.sock)
+#
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "example.com" # <---- (REPLACE: with your root domain)
+watch = true
+
+# Hide all docker containers that don't have explicitly set label to "enable"
+exposedbydefault = false
