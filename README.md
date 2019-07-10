@@ -44,7 +44,6 @@ Coming soon ...
     PUID=1000
     PGID=999
     TZ=America/Los_Angeles
-    USERDIR=/home/admin
     HTTP_USERNAME=admin
     HTTP_PASSWORD=mysuperstrongpassword
     DOMAINNAME=domain.com
