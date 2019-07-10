@@ -18,8 +18,8 @@ defaultEntryPoints = ["https", "http"]
 [entryPoints]
   [entryPoints.http]
   address = ":80"
-    [entryPoints.http.redirect]
-    entryPoint = "https"
+  [entryPoints.http.redirect]
+  entryPoint = "https"
   [entryPoints.https]
   address = ":443"
     [entryPoints.https.tls]
@@ -43,7 +43,7 @@ acmeLogging = true
 onDemand = false
 [acme.dnsChallenge]
   provider = "cloudflare"
-  delayBeforeCheck = 300
+  delayBeforeCheck = 0
 [[acme.domains]]
   main = "example.com" # <---- (REPLACE: with your root domain)
 [[acme.domains]]
@@ -58,4 +58,4 @@ domain = "example.com" # <---- (REPLACE: with your root domain)
 watch = true
 
 # Hide all docker containers that don't have explicitly set label to "enable"
-exposedbydefault = false
+exposedByDefault = false
