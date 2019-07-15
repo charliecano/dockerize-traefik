@@ -1,9 +1,10 @@
 # Dockerize Traefik
 
-This project was heavily influenced by this tutorial:
-
-*   <https://www.smarthomebeginner.com/traefik-reverse-proxy-tutorial-for-docker/>
-*   <https://github.com/htpcBeginner/AtoMiC-ToolKit-Docker>
+This project was heavily influenced by
+[this](https://www.smarthomebeginner.com/traefik-reverse-proxy-tutorial-for-docker/)
+tutorial and
+[this](https://github.com/htpcBeginner/AtoMiC-ToolKit-Docker)
+project.
 
 ## Prerequisites
 
@@ -12,12 +13,6 @@ This project was heavily influenced by this tutorial:
 *   A linux box to deploy to ;)
 
 ## Up and Running
-
-### Using Library Scripts
-
-Coming soon ...
-
-### Manually
 
 1.  Create a directory that will serve as the home for your docker services.
 
@@ -41,14 +36,14 @@ Coming soon ...
     ```sh
     # Example: .env file
 
+    CLOUDFLARE_API_KEY=mycloudflareapikey
+    CLOUDFLARE_EMAIL=admin@domain.com
+    DOMAINNAME=domain.com
+    HTTP_USERNAME=admin
+    HTTP_PASSWORD=mysuperstrongpassword
     PUID=1000
     PGID=999
     TZ=America/Los_Angeles
-    HTTP_USERNAME=admin
-    HTTP_PASSWORD=mysuperstrongpassword
-    DOMAINNAME=domain.com
-    CLOUDFLARE_EMAIL=admin@domain.com
-    CLOUDFLARE_API_KEY=mycloudflareapikey
     ```
 
 1.  Create "acme.json".
@@ -99,3 +94,6 @@ Coming soon ...
     ```sh
     docker-compose logs -tf --tail="50" traefik
     ```
+
+If all went well,
+you should now have a traefik reverse proxy all set up!
