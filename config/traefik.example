@@ -17,12 +17,12 @@ defaultEntryPoints = ["https", "http"]
 #
 [entryPoints]
   [entryPoints.http]
-  address = ":80"
+    address = ":80"
   [entryPoints.http.redirect]
-  entryPoint = "https"
+    entryPoint = "https"
   [entryPoints.https]
-  address = ":443"
-    [entryPoints.https.tls]
+    address = ":443"
+      [entryPoints.https.tls]
 
 #
 # Add'l configuration.
@@ -36,26 +36,26 @@ defaultEntryPoints = ["https", "http"]
 # Let's encrypt configuration
 #
 [acme]
-email = "admin@example.com" # <---- (REPLACE: with your email)
-storage = "/etc/traefik/acme/acme.json"
-entryPoint = "https"
-acmeLogging = true
-onDemand = false
-[acme.dnsChallenge]
-  provider = "cloudflare"
-  delayBeforeCheck = 0
-[[acme.domains]]
-  main = "example.com" # <---- (REPLACE: with your root domain)
-[[acme.domains]]
-  main = "*.example.com" # <---- (REPLACE: with your root domain *wildcard)
+  email = "admin@example.com" # <---- (REPLACE: with your email)
+  storage = "/etc/traefik/acme/acme.json"
+  entryPoint = "https"
+  acmeLogging = true
+  onDemand = false
+  [acme.dnsChallenge]
+    provider = "cloudflare"
+    delayBeforeCheck = 0
+  [[acme.domains]]
+    main = "example.com" # <---- (REPLACE: with your root domain)
+  [[acme.domains]]
+    main = "*.example.com" # <---- (REPLACE: with your root domain *wildcard)
 
 #
 # Connection to docker host system (docker.sock)
 #
 [docker]
-endpoint = "unix:///var/run/docker.sock"
-domain = "example.com" # <---- (REPLACE: with your root domain)
-watch = true
+  endpoint = "unix:///var/run/docker.sock"
+  domain = "example.com" # <---- (REPLACE: with your root domain)
+  watch = true
 
 # Hide all docker containers that don't have explicitly set label to "enable"
 exposedByDefault = false

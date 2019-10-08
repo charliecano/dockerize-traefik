@@ -1,4 +1,6 @@
 acme/acme.json
 config/rules.toml
+config/rules.yml
 config/traefik.toml
+config/traefik.yml
 .env
