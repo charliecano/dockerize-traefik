@@ -10,13 +10,13 @@
       [certificatesResolvers.cloudflare.acme.dnsChallenge]
         provider = "cloudflare"
         delayBeforeCheck = 0
+        resolvers = ["1.1.1.1:53", "8.8.8.8:53"]
 
 [entryPoints]
   [entryPoints.http]
     address = ":80"
   [entryPoints.https]
     address = ":443"
-
 
 [providers]
   [providers.docker]
