@@ -1,6 +1,6 @@
 [api]
   dashboard = true
-  address = ":8080"
+  address = ":443"
 
 [certificatesResolvers]
   [certificatesResolvers.cloudflare]
@@ -14,13 +14,9 @@
 [entryPoints]
   [entryPoints.http]
     address = ":80"
-  [entryPoints.http.redirect] # force https
-    entryPoint = "https"
   [entryPoints.https]
     address = ":443"
-      [entryPoints.https.tls]
-      [entryPoints.https.traefik]
-        address="traefik"
+
 
 [providers]
   [providers.docker]
@@ -28,6 +24,10 @@
     endpoint = "unix:///var/run/docker.sock"
     exposedByDefault = true
     watch = true
+
+[http.middlewares]
+  [http.middlewares.https-redirect.redirectscheme]
+    scheme = "https"
 
 [serversTransport]
   insecureSkipVerify = true
