@@ -12,5 +12,5 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./config/conf.toml:/config
+      - ./config:/config
       - ./letsencrypt:/letsencrypt
