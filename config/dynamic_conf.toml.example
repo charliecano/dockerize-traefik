@@ -1,3 +1,7 @@
+[global]
+  checkNewVersion = false
+  sendAnonymousUsage = false
+
 [api]
   dashboard = true
   address = ":443"
@@ -5,6 +9,7 @@
 [certificatesResolvers]
   [certificatesResolvers.cloudflare]
     [certificatesResolvers.cloudflare.acme]
+      caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
       email = "admin@example.com" # REPLACE: with your email
       storage = "/letsencrypt/acme.json"
       [certificatesResolvers.cloudflare.acme.dnsChallenge]
@@ -13,9 +18,9 @@
         resolvers = ["1.1.1.1:53", "8.8.8.8:53"]
 
 [entryPoints]
-  [entryPoints.http]
+  [entryPoints.web]
     address = ":80"
-  [entryPoints.https]
+  [entryPoints.web_secure]
     address = ":443"
 
 [providers]
