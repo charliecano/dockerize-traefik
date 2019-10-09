@@ -49,7 +49,7 @@ project.
 1.  Create "acme.json".
 
     ```sh
-    touch acme/acme.json && chmod 600 acme/acme.json
+    mkdir acme && touch acme/acme.json && chmod 600 acme/acme.json
     ```
 
 1.  Create the traefik config file and modify with your information.
