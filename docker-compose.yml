@@ -2,32 +2,15 @@ version: "3"
 
 services:
   traefik:
+    image: traefik:v2.0
     command:
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --providers.docker=true
-      - --api.dashboard=true
-      - --certificatesresolvers.le.acme.email=${CLOUDFLARE_EMAIL}
-      - --certificatesresolvers.le.acme.storage=/etc/traefik/acme/acme.json
-      - --certificatesresolvers.le.acme.tlschallenge=true
-    container_name: traefik
-    environment:
-      - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
-      - CF_API_KEY=${CLOUDFLARE_API_KEY}
-    hostname: traefik
-    image: traefik:v2.0.1
-    labels:
-      - "traefik.http.routers.traefik.rule=Host(traefik.${DOMAINNAME})"
-      - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik.middlewares=admin"
-      - "traefik.http.routers.traefik.tls.certresolver=le"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.middlewares.admin.basicauth.users=${HTTP_USERNAME}:${HTTP_PASSWORD}"
+      - --providers.file.filename=/config/dynamic_conf.toml
+      - --providers.file.watch=true
     ports:
       - "80:80"
       - "443:443"
     restart: always
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./config:/etc/traefik
-      - ./acme:/etc/traefik/acme
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/conf.toml:/config
+      - ./letsencrypt:/letsencrypt

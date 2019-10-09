@@ -1,0 +1,33 @@
+[api]
+  dashboard = true
+  address = ":8080"
+
+[certificatesResolvers]
+  [certificatesResolvers.cloudflare]
+    [certificatesResolvers.cloudflare.acme]
+      email = "admin@example.com" # REPLACE: with your email
+      storage = "/letsencrypt/acme.json"
+      [certificatesResolvers.cloudflare.acme.dnsChallenge]
+        provider = "cloudflare"
+        delayBeforeCheck = 0
+
+[entryPoints]
+  [entryPoints.http]
+    address = ":80"
+  [entryPoints.http.redirect] # force https
+    entryPoint = "https"
+  [entryPoints.https]
+    address = ":443"
+      [entryPoints.https.tls]
+      [entryPoints.https.traefik]
+        address="traefik"
+
+[providers]
+  [providers.docker]
+    domain = "example.com" # REPLACE: with your root domain
+    endpoint = "unix:///var/run/docker.sock"
+    exposedByDefault = true
+    watch = true
+
+[serversTransport]
+  insecureSkipVerify = true
