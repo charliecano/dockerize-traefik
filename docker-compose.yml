@@ -6,6 +6,9 @@ services:
     command:
       - --providers.file.filename=/config/dynamic_conf.toml
       - --providers.file.watch=true
+    environment:
+      - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
+      - CF_API_KEY=${CLOUDFLARE_API_KEY}
     ports:
       - "80:80"
       - "443:443"

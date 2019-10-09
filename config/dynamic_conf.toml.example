@@ -2,9 +2,11 @@
   checkNewVersion = false
   sendAnonymousUsage = false
 
-[api]
-  dashboard = true
-  address = ":443"
+[entryPoints]
+  [entryPoints.web]
+    address = ":80"
+  [entryPoints.web_secure]
+    address = ":443"
 
 [certificatesResolvers]
   [certificatesResolvers.cloudflare]
@@ -17,12 +19,6 @@
         delayBeforeCheck = 0
         resolvers = ["1.1.1.1:53", "8.8.8.8:53"]
 
-[entryPoints]
-  [entryPoints.web]
-    address = ":80"
-  [entryPoints.web_secure]
-    address = ":443"
-
 [providers]
   [providers.docker]
     domain = "example.com" # REPLACE: with your root domain
@@ -33,6 +29,10 @@
 [http.middlewares]
   [http.middlewares.https-redirect.redirectscheme]
     scheme = "https"
+
+[api]
+  dashboard = true
+  address = "web_secure"
 
 [serversTransport]
   insecureSkipVerify = true
