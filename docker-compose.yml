@@ -5,10 +5,10 @@ services:
     command:
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
-      - --providers.docker
-      - --api
+      - --providers.docker=true
+      - --api.dashboard=true
       - --certificatesresolvers.le.acme.email=${CLOUDFLARE_EMAIL}
-      - --certificatesresolvers.le.acme.storage=/acme.json
+      - --certificatesresolvers.le.acme.storage=/etc/traefik/acme/acme.json
       - --certificatesresolvers.le.acme.tlschallenge=true
     container_name: traefik
     environment:
@@ -17,7 +17,7 @@ services:
     hostname: traefik
     image: traefik:v2.0.1
     labels:
-      - "traefik.http.routers.traefik.rule=Host(${DOMAINNAME})"
+      - "traefik.http.routers.traefik.rule=Host(traefik.${DOMAINNAME})"
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.middlewares=admin"
       - "traefik.http.routers.traefik.tls.certresolver=le"
