@@ -29,5 +29,5 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./traefik/config:/etc/traefik
-      - ./traefik/acme:/etc/traefik/acme
+      - ./config:/etc/traefik
+      - ./acme:/etc/traefik/acme
