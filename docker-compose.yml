@@ -4,12 +4,12 @@ services:
   traefik:
     command:
       - --api.insecure=true
-      - --certificatesResolvers.traefik.acme.caServer="https://acme-staging-v02.api.letsencrypt.org/directory"
-      - --certificatesResolvers.traefik.acme.dnsChallenge=true
-      - --certificatesResolvers.traefik.acme.dnsChallenge.provider=cloudflare
-      - --certificatesResolvers.traefik.acme.dnsChallenge.delayBeforeCheck=0
-      - --certificatesResolvers.traefik.acme.email=${CF_API_EMAIL}
-      - --certificatesResolvers.traefik.acme.storage=/letsencrypt/acme.json
+      - --certificatesResolvers.cloudflare.acme.caServer="https://acme-staging-v02.api.letsencrypt.org/directory"
+      - --certificatesResolvers.cloudflare.acme.dnsChallenge=true
+      - --certificatesResolvers.cloudflare.acme.dnsChallenge.provider=cloudflare
+      - --certificatesResolvers.cloudflare.acme.dnsChallenge.delayBeforeCheck=0
+      - --certificatesResolvers.cloudflare.acme.email=${CF_API_EMAIL}
+      - --certificatesResolvers.cloudflare.acme.storage=/letsencrypt/acme.json
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.address=:443
       - --providers.docker=true
@@ -35,9 +35,7 @@ services:
       - traefik.http.middlewares.traefik.headers.stsPreload=true
       - traefik.http.middlewares.traefik.headers.frameDeny=true
       - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)
-    networks:
-      - default
-      - traefik
+      - traefik.http.routers.traefik.tls.certResolver=cloudflare
     ports:
       - "80:80"
       - "443:443"
@@ -46,9 +44,3 @@ services:
     volumes:
       - ./letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
-
-networks:
-  default:
-    driver: bridge
-  traefik:
-    internal: true
