@@ -2,18 +2,32 @@ version: "3"
 
 services:
   traefik:
-    image: traefik:v2.0
     command:
-      - --providers.file.filename=/config/dynamic_conf.toml
-      - --providers.file.watch=true
+      - --api.insecure=true
+      - --certificatesResolvers.myDnsChallenge.acme.dnsChallenge=true
+      - --certificatesResolvers.myDnsChallenge.acme.dnsChallenge.provider=cloudflare
+      - --certificatesResolvers.myDnsChallenge.acme.dnsChallenge.delayBeforeCheck=0
+      - --certificatesResolvers.myDnsChallenge.acme.email=${CF_API_EMAIL}
+      - --certificatesResolvers.myDnsChallenge.acme.storage=/letsencrypt/acme.json
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker=true
+      - --providers.docker.endPoint=unix:///var/run/docker.sock
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=traefik_proxy
+      - --serversTransport.insecureSkipVerify=true
+    container_name: traefik
     environment:
-      - CF_API_EMAIL=${CLOUDFLARE_EMAIL}
-      - CF_API_KEY=${CLOUDFLARE_API_KEY}
+      - CF_API_EMAIL=${CF_API_EMAIL}
+      - CF_API_KEY=${CF_API_KEY}
+    image: traefik:v2.0
+    labels:
+      - traefik.http.routers.myProxy.rule=Host(`traefik.${DOMAIN_NAME}`)
     ports:
       - "80:80"
       - "443:443"
+      - "8080:8080"
     restart: always
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./config:/config
       - ./letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock

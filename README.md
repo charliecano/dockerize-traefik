@@ -37,7 +37,7 @@ project.
     # Example: .env file
 
     CLOUDFLARE_API_KEY=mycloudflareapikey
-    CLOUDFLARE_EMAIL=admin@domain.com
+    CLOUDFLARE_API_EMAIL=admin@domain.com
     DOMAINNAME=domain.com
     HTTP_USERNAME=admin
     HTTP_PASSWORD=mysuperstrongpassword
