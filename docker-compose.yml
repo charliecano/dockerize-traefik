@@ -3,39 +3,42 @@ version: "3"
 services:
   traefik:
     command:
-      - --api.insecure=true
-      - --certificatesResolvers.cloudflare.acme.caServer="https://acme-staging-v02.api.letsencrypt.org/directory"
-      - --certificatesResolvers.cloudflare.acme.dnsChallenge=true
-      - --certificatesResolvers.cloudflare.acme.dnsChallenge.provider=cloudflare
-      - --certificatesResolvers.cloudflare.acme.dnsChallenge.delayBeforeCheck=0
-      - --certificatesResolvers.cloudflare.acme.email=${CF_API_EMAIL}
-      - --certificatesResolvers.cloudflare.acme.storage=/letsencrypt/acme.json
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --providers.docker=true
-      - --providers.docker.endPoint=unix:///var/run/docker.sock
-      - --providers.docker.exposedByDefault=false
-      - --providers.docker.network=traefik_default
-      - --serversTransport.insecureSkipVerify=true
+      - "--api.insecure=true"
+      - "--certificatesResolvers.cloudflare.acme.caServer="https://acme-staging-v02.api.letsencrypt.org/directory""
+      - "--certificatesResolvers.cloudflare.acme.dnsChallenge=true"
+      - "--certificatesResolvers.cloudflare.acme.dnsChallenge.provider=cloudflare"
+      - "--certificatesResolvers.cloudflare.acme.dnsChallenge.delayBeforeCheck=0"
+      - "--certificatesResolvers.cloudflare.acme.email=${CF_API_EMAIL}"
+      - "--certificatesResolvers.cloudflare.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--providers.docker=true"
+      - "--providers.docker.endPoint=unix:///var/run/docker.sock"
+      - "--providers.docker.exposedByDefault=false"
+      - "--providers.docker.network=traefik_default"
+      - "--serversTransport.insecureSkipVerify=true"
     container_name: traefik
     environment:
-      - CF_API_EMAIL=${CF_API_EMAIL}
-      - CF_API_KEY=${CF_API_KEY}
+      - "CF_API_EMAIL=${CF_API_EMAIL}"
+      - "CF_API_KEY=${CF_API_KEY}"
     image: traefik:v2.0
     labels:
-      - traefik.http.middlewares.traefik.basicauth.users=${USERNAME}:${PASSWORD}
-      - traefik.http.middlewares.traefik.headers.sslRedirect=true
-      - traefik.http.middlewares.traefik.headers.stsSeconds=315360000
-      - traefik.http.middlewares.traefik.headers.browserXssFilter=true
-      - traefik.http.middlewares.traefik.headers.contentTypeNoSniff=true
-      - traefik.http.middlewares.traefik.headers.customResponseHeaders.X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
-      - traefik.http.middlewares.traefik.headers.forceSTSHeader=true
-      - traefik.http.middlewares.traefik.headers.sslHost=${DOMAIN_NAME}
-      - traefik.http.middlewares.traefik.headers.stsIncludeSubdomains=true
-      - traefik.http.middlewares.traefik.headers.stsPreload=true
-      - traefik.http.middlewares.traefik.headers.frameDeny=true
-      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)
-      - traefik.http.routers.traefik.tls.certResolver=cloudflare
+      - "traefik.http.middlewares.traefik.basicauth.users=${USERNAME}:${PASSWORD}"
+      - "traefik.http.middlewares.traefik.headers.sslRedirect=true"
+      - "traefik.http.middlewares.traefik.headers.stsSeconds=315360000"
+      - "traefik.http.middlewares.traefik.headers.browserXssFilter=true"
+      - "traefik.http.middlewares.traefik.headers.contentTypeNoSniff=true"
+      - "traefik.http.middlewares.traefik.headers.customResponseHeaders.X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+      - "traefik.http.middlewares.traefik.headers.forceSTSHeader=true"
+      - "traefik.http.middlewares.traefik.headers.sslHost=${DOMAIN_NAME}"
+      - "traefik.http.middlewares.traefik.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.traefik.headers.stsPreload=true"
+      - "traefik.http.middlewares.traefik.headers.frameDeny=true"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.routers.traefik.tls.certResolver=cloudflare"
+      - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_NAME}"
+      - "traefik.http.routers.traefik.tls.domains[1].main=*.${DOMAIN_NAME}"
     ports:
       - "80:80"
       - "443:443"
