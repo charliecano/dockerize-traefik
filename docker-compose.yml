@@ -4,6 +4,7 @@ services:
   traefik:
     command:
       - --api.insecure=true
+      - --certificatesResolvers.myDnsChallenge.acme.caServer="https://acme-staging-v02.api.letsencrypt.org/directory"
       - --certificatesResolvers.myDnsChallenge.acme.dnsChallenge=true
       - --certificatesResolvers.myDnsChallenge.acme.dnsChallenge.provider=cloudflare
       - --certificatesResolvers.myDnsChallenge.acme.dnsChallenge.delayBeforeCheck=0
@@ -22,7 +23,17 @@ services:
       - CF_API_KEY=${CF_API_KEY}
     image: traefik:v2.0
     labels:
-      - traefik.http.routers.myProxy.rule=Host(`traefik.${DOMAIN_NAME}`)
+      - traefik.http.middlewares.traefik.headers.sslRedirect=true
+      - traefik.http.middlewares.traefik.headers.stsSeconds=315360000
+      - traefik.http.middlewares.traefik.headers.browserXssFilter=true
+      - traefik.http.middlewares.traefik.headers.contentTypeNoSniff=true
+      - traefik.http.middlewares.traefik.headers.customResponseHeaders.X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+      - traefik.http.middlewares.traefik.headers.forceSTSHeader=true
+      - traefik.http.middlewares.traefik.headers.sslHost=${DOMAIN_NAME}
+      - traefik.http.middlewares.traefik.headers.stsIncludeSubdomains=true
+      - traefik.http.middlewares.traefik.headers.stsPreload=true
+      - traefik.http.middlewares.traefik.headers.frameDeny=true
+      - traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)
     ports:
       - "80:80"
       - "443:443"
@@ -31,3 +42,8 @@ services:
     volumes:
       - ./letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
+
+  whoami:
+    image: containous/whoami
+    labels:
+      - traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN_NAME}`)
