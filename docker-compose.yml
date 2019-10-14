@@ -14,7 +14,7 @@ services:
       - --providers.docker=true
       - --providers.docker.endPoint=unix:///var/run/docker.sock
       - --providers.docker.exposedByDefault=false
-      - --providers.docker.network=traefik_proxy
+      - --providers.docker.network=traefik_default
       - --serversTransport.insecureSkipVerify=true
     container_name: traefik
     environment:
