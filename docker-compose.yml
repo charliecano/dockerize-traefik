@@ -3,20 +3,20 @@ version: "3"
 services:
   traefik:
     command:
-      - "--api.insecure=true"
-      - "--certificatesResolvers.cloudflare.acme.caServer="https://acme-staging-v02.api.letsencrypt.org/directory""
-      - "--certificatesResolvers.cloudflare.acme.dnsChallenge=true"
-      - "--certificatesResolvers.cloudflare.acme.dnsChallenge.provider=cloudflare"
-      - "--certificatesResolvers.cloudflare.acme.dnsChallenge.delayBeforeCheck=0"
-      - "--certificatesResolvers.cloudflare.acme.email=${CF_API_EMAIL}"
-      - "--certificatesResolvers.cloudflare.acme.storage=/letsencrypt/acme.json"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--providers.docker=true"
-      - "--providers.docker.endPoint=unix:///var/run/docker.sock"
-      - "--providers.docker.exposedByDefault=false"
-      - "--providers.docker.network=traefik_default"
-      - "--serversTransport.insecureSkipVerify=true"
+      - --api.insecure=true
+      - --certificatesResolvers.cloudflare.acme.caServer="https://acme-staging-v02.api.letsencrypt.org/directory"
+      - --certificatesResolvers.cloudflare.acme.dnsChallenge=true
+      - --certificatesResolvers.cloudflare.acme.dnsChallenge.provider=cloudflare
+      - --certificatesResolvers.cloudflare.acme.dnsChallenge.delayBeforeCheck=0
+      - --certificatesResolvers.cloudflare.acme.email=${CF_API_EMAIL}
+      - --certificatesResolvers.cloudflare.acme.storage=/letsencrypt/acme.json
+      - --entrypoints.web.address=:80
+      - --entrypoints.websecure.address=:443
+      - --providers.docker=true
+      - --providers.docker.endPoint=unix:///var/run/docker.sock
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.network=traefik_default
+      - --serversTransport.insecureSkipVerify=true
     container_name: traefik
     environment:
       - "CF_API_EMAIL=${CF_API_EMAIL}"
