@@ -3,8 +3,7 @@ version: "3"
 services:
   traefik:
     command:
-      - --api.insecure=true
-      - --certificatesResolvers.cloudflare.acme.caServer="https://acme-staging-v02.api.letsencrypt.org/directory"
+      - --api.dashboard=true
       - --certificatesResolvers.cloudflare.acme.dnsChallenge=true
       - --certificatesResolvers.cloudflare.acme.dnsChallenge.provider=cloudflare
       - --certificatesResolvers.cloudflare.acme.dnsChallenge.delayBeforeCheck=0
@@ -34,7 +33,7 @@ services:
       - "traefik.http.middlewares.traefik.headers.stsIncludeSubdomains=true"
       - "traefik.http.middlewares.traefik.headers.stsPreload=true"
       - "traefik.http.middlewares.traefik.headers.frameDeny=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)"
+      # - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.routers.traefik.tls.certResolver=cloudflare"
       - "traefik.http.routers.traefik.tls.domains[0].main=${DOMAIN_NAME}"
