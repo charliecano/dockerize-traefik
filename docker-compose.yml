@@ -5,8 +5,8 @@ services:
     container_name: traefik
     domainname: ${DOMAINNAME}
     environment:
-      CF_API_EMAIL: ${CLOUDFLARE_EMAIL}
-      CF_API_KEY: ${CLOUDFLARE_API_KEY}
+      CLOUDFLARE_EMAIL: ${CLOUDFLARE_EMAIL}
+      CLOUDFLARE_API_KEY: ${CLOUDFLARE_API_KEY}
     hostname: traefik
     image: traefik:v1.7.18
     labels:
