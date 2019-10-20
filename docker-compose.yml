@@ -39,8 +39,8 @@ services:
     restart: always
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - .:/etc/traefik
-      # - ./acme:/etc/traefik/acme
+      - ${USERDIR}/docker/traefik:/etc/traefik
+      - ${USERDIR}/docker/shared:/shared
 
 networks:
   default:
