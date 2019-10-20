@@ -1,63 +1,61 @@
-# debug = true
+#debug = true
 
-logLevel = "ERROR" # DEBUG, INFO, WARN, ERROR, FATAL, PANIC
+logLevel = "ERROR" #DEBUG, INFO, WARN, ERROR, FATAL, PANIC
 InsecureSkipVerify = true
 defaultEntryPoints = ["https", "http"]
 
-#
-# Web interface of Traefik
-#
+# WEB interface of Traefik - it will show web page with overview of frontend and backend configurations
+#[web]
+#address = ":8080"
+#  [web.auth.basic]
+#  usersFile = "/shared/.htpasswd"
+
 [api]
   entryPoint = "traefik"
   dashboard = true
   address = ":8080"
   usersFile = "/shared/.htpasswd"
 
-#
 # Force HTTPS
-#
 [entryPoints]
   [entryPoints.http]
-    address = ":80"
-  [entryPoints.http.redirect]
+  address = ":80"
+    [entryPoints.http.redirect]
     entryPoint = "https"
   [entryPoints.https]
-    address = ":443"
-      [entryPoints.https.tls]
+  address = ":443"
+#    [entryPoints.https.auth.basic]
+#    usersFile = "/shared/.htpasswd"
+    [entryPoints.https.tls]
 
-#
-# Add'l configuration.
-# https://docs.traefik.io/configuration/backends/file/
-#
-# [file]
-#   watch = true
-#   filename = "/etc/traefik/rules.toml"
-
-#
-# Let's encrypt configuration
-#
-[acme]
-  caServer = "https://acme-v02.api.letsencrypt.org/directory"
-  email = "admin@example.com" # <---- (REPLACE: with your email)
-  storage = "/etc/traefik/acme/acme.json"
-  entryPoint = "https"
-  acmeLogging = true
-  onDemand = false
-  [acme.dnsChallenge]
-    provider = "cloudflare"
-    delayBeforeCheck = 0
-  [[acme.domains]]
-    main = "example.com" # <---- (REPLACE: with your root domain)
-  [[acme.domains]]
-    main = "*.example.com" # <---- (REPLACE: with your root domain *wildcard)
-
-#
-# Connection to docker host system (docker.sock)
-#
-[docker]
-  endpoint = "unix:///var/run/docker.sock"
-  domain = "example.com" # <---- (REPLACE: with your root domain)
+[file]
+  directory = "/etc/traefik/rules/"
   watch = true
 
-# Hide all docker containers that don't have explicitly set label to "enable"
-exposedByDefault = false
+# Let's encrypt configuration
+[acme]
+email = "admin@example.com"
+storage="/etc/traefik/acme/acme.json"
+entryPoint = "https"
+acmeLogging=true
+onDemand = false #create certificate when container is created
+#onHostRule = true #disable for wildcard domains
+# Use a HTTP-01 acme challenge rather than TLS-SNI-01 challenge
+#[acme.httpChallenge] #does not work with wildcard domains, use dns challenge
+#  entryPoint = "http" #does not work with wildcard domains
+[acme.dnsChallenge]
+  provider = "cloudflare"
+  delayBeforeCheck = 0
+[[acme.domains]]
+   main = "example.com"
+[[acme.domains]]
+   main = "*.example.com"
+
+# Connection to docker host system (docker.sock)
+[docker]
+endpoint = "unix:///var/run/docker.sock"
+domain = "example.com"
+watch = true
+# This will hide all docker containers that don't have explicitly
+# set label to "enable"
+exposedbydefault = false
