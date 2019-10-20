@@ -43,7 +43,7 @@ defaultEntryPoints = ["https", "http"]
   onDemand = false
   [acme.dnsChallenge]
     provider = "cloudflare"
-    delayBeforeCheck = 0
+    delayBeforeCheck = 300
   [[acme.domains]]
     main = "example.com" # <---- (REPLACE: with your root domain)
   [[acme.domains]]
