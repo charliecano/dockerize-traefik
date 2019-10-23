@@ -2,6 +2,8 @@ version: "3"
 
 services:
   traefik:
+    command:
+      - --configFile=/etc/traefik/config/traefik.toml
     container_name: traefik
     environment:
       - "CF_API_EMAIL=${CF_API_EMAIL}"
