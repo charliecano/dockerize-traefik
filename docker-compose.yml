@@ -19,9 +19,9 @@ services:
     image: traefik:v2.0
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN_NAME}`)"
-      - "traefik.http.routers.api.service=websecure"
-      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.dashboard.rule=Host(`dashboard.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.dashboard.service=websecure"
+      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
     ports:
       - "80:80"
       - "443:443"
