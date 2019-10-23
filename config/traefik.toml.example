@@ -21,19 +21,16 @@
 [http.routers]
   [http.routers.encrypted]
     rule = "Host(example.com)" # REPLACE W/ YOUR DOMAIN
-    service = "websafe"
     [http.routers.encrypted.tls]
       certResolver = "letsencrypt"
     [http.routers.unencrypted]
       rule = "Host(example.com)" # REPLACE W/ YOUR DOMAIN
-      service = "websafe"
 
 [http.middlewares]
   [http.middlewares.redirect.redirectScheme]
     scheme = "https"
 
 [certificatesResolvers.letsencrypt.acme]
-  caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
   email = "admin@example.com" # REPLACE W/ YOUR EMAIL
   storage = "/etc/traefik/acme/acme.json"
   [certificatesResolvers.letsencrypt.acme.dnsChallenge]
