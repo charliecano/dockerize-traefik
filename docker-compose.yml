@@ -20,6 +20,7 @@ services:
     labels:
       - "traefik.http.routers.api.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
       - "traefik.http.routers.api.service=api@internal"
+      - "traefik.http.routers.api.tls.certresolver=letsencrypt"
       - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=test:test"
     ports:
