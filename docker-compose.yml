@@ -18,7 +18,7 @@ services:
       - "CF_API_KEY=${CF_API_KEY}"
     image: traefik:v2.0
     labels:
-      - "traefik.http.routers.api.rule=Host(`monitor.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api`) || PathPrefix(`/dashboard`)"
       - "traefik.http.routers.api.service=api@internal"
       - "traefik.http.routers.api.middlewares=auth"
       - "traefik.http.middlewares.auth.basicauth.users=test:test"
