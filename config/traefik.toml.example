@@ -29,13 +29,16 @@
       service = "websafe"
 
 [http.middlewares]
-  scheme = "https"
+  [http.middlewares.redirect.redirectScheme]
+    scheme = "https"
 
 [certificatesResolvers.letsencrypt.acme]
+  caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
   email = "admin@example.com" # REPLACE W/ YOUR EMAIL
   storage = "/etc/traefik/acme/acme.json"
   [certificatesResolvers.letsencrypt.acme.dnsChallenge]
     provider = "cloudflare"
+    delayBeforeCheck = 0
 
 [[acme.domains]]
   main = "*.example.com" # REPLACE W/ YOUR DOMAIN
