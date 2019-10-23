@@ -22,7 +22,7 @@
   [http.routers.encrypted]
     rule = "Host(example.com)" # REPLACE W/ YOUR DOMAIN
     service = "websafe"
-    [http.routers.encryptd.tls]
+    [http.routers.encrypted.tls]
       certResolver = "letsencrypt"
     [http.routers.unencrypted]
       rule = "Host(example.com)" # REPLACE W/ YOUR DOMAIN
