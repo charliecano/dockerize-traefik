@@ -1,38 +1,85 @@
+################################################################################
+# Global Configuration
+################################################################################
+
 [global]
   checkNewVersion = false
   sendAnonymousUsage = false
 
+################################################################################
+# Entrypoints Configuration
+################################################################################
+
 [entryPoints]
   [entryPoints.web]
     address = ":80"
-  [entryPoints.web_secure]
+  [entryPoints.websecure]
     address = ":443"
+  [entryPoints.traefik]
+    address = ":8080"
 
-[certificatesResolvers]
-  [certificatesResolvers.cloudflare]
-    [certificatesResolvers.cloudflare.acme]
-      caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
-      email = "admin@example.com" # REPLACE: with your email
-      storage = "/letsencrypt/acme.json"
-      [certificatesResolvers.cloudflare.acme.dnsChallenge]
-        provider = "cloudflare"
-        delayBeforeCheck = 0
-        resolvers = ["1.1.1.1:53", "8.8.8.8:53"]
-
-[providers]
-  [providers.docker]
-    domain = "example.com" # REPLACE: with your root domain
-    endpoint = "unix:///var/run/docker.sock"
-    exposedByDefault = true
-    watch = true
+[http.routers]
+  [http.routers.encrypted]
+    rule = "Host(example.com)" # REPLACE W/ YOUR DOMAIN
+    service = "websafe"
+    [http.routers.encryptd.tls]
+      certResolver = "letsencrypt"
+    [http.routers.unencrypted]
+      rule = "Host(example.com)" # REPLACE W/ YOUR DOMAIN
+      service = "websafe"
 
 [http.middlewares]
-  [http.middlewares.https-redirect.redirectscheme]
-    scheme = "https"
+  scheme = "https"
+
+[certificatesResolvers.letsencrypt.acme]
+  email = "admin@example.com" # REPLACE W/ YOUR EMAIL
+  storage = "/etc/traefik/acme/acme.json"
+  [certificatesResolvers.letsencrypt.acme.dnsChallenge]
+    provider = "cloudflare"
+
+[[acme.domains]]
+  main = "*.example.com" # REPLACE W/ YOUR DOMAIN
+  sans = "example.com" # REPLACE W/ YOUR DOMAIN
+
+################################################################################
+# Logs Configuration
+################################################################################
+
+[log]
+  level = "DEBUG"
+  filePath = "/etc/traefik/log/traefik.log"
+  format = "common"
+
+################################################################################
+# Access Logs Configuration
+################################################################################
+
+[accessLog]
+  filePath = "/etc/traefik/log/accessLog.txt"
+  format = "common"
+
+################################################################################
+# API and Dashboard Configuration
+################################################################################
 
 [api]
   dashboard = true
-  address = "web_secure"
 
-[serversTransport]
+################################################################################
+# Ping Configuration
+################################################################################
+
+[ping]
+  entryPoint = "traefik"
+
+################################################################################
+# Docker Configuration (backend)
+################################################################################
+
+[providers.docker]
+  endpoint = "unix:///var/run/docker.sock"
+  defaultRule = "Host(`{{ normalize .Name }}.docker.localhost`)"
+  exposedByDefault = false
+
+[providers.docker.tls]
   insecureSkipVerify = true

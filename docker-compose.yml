@@ -2,48 +2,36 @@ version: "3"
 
 services:
   traefik:
-    command:
-      - --api.dashboard=true
-      - --certificatesResolvers.cloudflare.acme.dnsChallenge=true
-      - --certificatesResolvers.cloudflare.acme.dnsChallenge.provider=cloudflare
-      - --certificatesResolvers.cloudflare.acme.dnsChallenge.delayBeforeCheck=0
-      - --certificatesResolvers.cloudflare.acme.email=${CF_API_EMAIL}
-      - --certificatesResolvers.cloudflare.acme.storage=/letsencrypt/acme.json
-      - --entrypoints.web.address=:80
-      - --entrypoints.websecure.address=:443
-      - --providers.docker=true
-      - --providers.docker.endPoint=unix:///var/run/docker.sock
-      - --providers.docker.exposedByDefault=false
-      - --providers.docker.network=traefik_default
-      - --serversTransport.insecureSkipVerify=true
     container_name: traefik
     environment:
       - "CF_API_EMAIL=${CF_API_EMAIL}"
       - "CF_API_KEY=${CF_API_KEY}"
     image: traefik:v2.0
-    labels:
-      - "traefik.http.middlewares.api.basicauth.users=${USERNAME}:${PASSWORD}"
-      - "traefik.http.middlewares.api.headers.sslRedirect=true"
-      - "traefik.http.middlewares.api.headers.stsSeconds=315360000"
-      - "traefik.http.middlewares.api.headers.browserXssFilter=true"
-      - "traefik.http.middlewares.api.headers.contentTypeNoSniff=true"
-      - "traefik.http.middlewares.api.headers.customResponseHeaders.X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
-      - "traefik.http.middlewares.api.headers.forceSTSHeader=true"
-      - "traefik.http.middlewares.api.headers.sslHost=${DOMAIN_NAME}"
-      - "traefik.http.middlewares.api.headers.stsIncludeSubdomains=true"
-      - "traefik.http.middlewares.api.headers.stsPreload=true"
-      - "traefik.http.middlewares.api.headers.frameDeny=true"
-      - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN_NAME}`)"
-      - "traefik.http.routers.api.service=api@internal"
-      - "traefik.http.routers.api.tls=true"
-      - "traefik.http.routers.api.tls.certResolver=cloudflare"
-      - "traefik.http.routers.api.tls.domains[0].main=${DOMAIN_NAME}"
-      - "traefik.http.routers.api.tls.domains[1].sans=*.${DOMAIN_NAME}"
+    # labels:
+      # - "traefik.http.middlewares.api.basicauth.users=${USERNAME}:${PASSWORD}"
+      # - "traefik.http.middlewares.api.headers.sslRedirect=true"
+      # - "traefik.http.middlewares.api.headers.stsSeconds=315360000"
+      # - "traefik.http.middlewares.api.headers.browserXssFilter=true"
+      # - "traefik.http.middlewares.api.headers.contentTypeNoSniff=true"
+      # - "traefik.http.middlewares.api.headers.customResponseHeaders.X-Robots-Tag=noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex"
+      # - "traefik.http.middlewares.api.headers.forceSTSHeader=true"
+      # - "traefik.http.middlewares.api.headers.sslHost=${DOMAIN_NAME}"
+      # - "traefik.http.middlewares.api.headers.stsIncludeSubdomains=true"
+      # - "traefik.http.middlewares.api.headers.stsPreload=true"
+      # - "traefik.http.middlewares.api.headers.frameDeny=true"
+      # - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN_NAME}`)"
+      # - "traefik.http.routers.api.service=api@internal"
+      # - "traefik.http.routers.api.tls=true"
+      # - "traefik.http.routers.api.tls.certResolver=cloudflare"
+      # - "traefik.http.routers.api.tls.domains[0].main=${DOMAIN_NAME}"
+      # - "traefik.http.routers.api.tls.domains[1].sans=*.${DOMAIN_NAME}"
     ports:
       - "80:80"
       - "443:443"
       - "8080:8080"
     restart: always
     volumes:
-      - ./letsencrypt:/letsencrypt
+      - ./config:/etc/traefik/config
+      - ./letsencrypt:/etc/traefik/acme
+      - ./log:/etc/traefik/log
       - /var/run/docker.sock:/var/run/docker.sock
