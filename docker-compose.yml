@@ -3,7 +3,8 @@ version: "3"
 services:
   traefik:
     command:
-      - "--api-insecure=true"
+      - "--api=true"
+      - "--api.dashboard=false"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -17,26 +18,20 @@ services:
       - "CF_API_EMAIL=${CF_API_EMAIL}"
       - "CF_API_KEY=${CF_API_KEY}"
     image: traefik:v2.0
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`dashboard.${DOMAIN_NAME}`)"
-      - "traefik.http.routers.dashboard.service=websecure"
-      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
     ports:
       - "80:80"
       - "443:443"
-      - "8080:8080"
     restart: unless-stopped
     volumes:
       - ./letsencrypt:/etc/traefik/acme
       - ./log:/etc/traefik/log
       - /var/run/docker.sock:/var/run/docker.sock
 
-  whoami:
-    container_name: "simple-service"
-    image: "containous/whoami"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN_NAME}`)"
-      - "traefik.http.routers.whoami.entrypoints=websecure"
-      - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
+  # whoami:
+  #   container_name: "simple-service"
+  #   image: "containous/whoami"
+  #   labels:
+  #     - "traefik.enable=true"
+  #     - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN_NAME}`)"
+  #     - "traefik.http.routers.whoami.entrypoints=websecure"
+  #     - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
