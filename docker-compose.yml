@@ -18,6 +18,8 @@ services:
       - "CF_API_EMAIL=${CF_API_EMAIL}"
       - "CF_API_KEY=${CF_API_KEY}"
     image: traefik:v2.0
+    labels:
+      - "traefik.enable=true"
     ports:
       - "80:80"
       - "443:443"
