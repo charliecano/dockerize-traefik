@@ -21,6 +21,14 @@ services:
     image: traefik:v2.0
     labels:
       - "traefik.enable=true"
+      - "traefik.http.middlewares.custom.headers.browserXSSFilter=true"
+      - "traefik.http.middlewares.custom.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.custom.headers.forceSTSHeader=true"
+      - "traefik.http.middlewares.custom.headers.frameDeny=true"
+      - "traefik.http.middlewares.custom.headers.sslredirect=true"
+      - "traefik.http.middlewares.custom.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.custom.headers.stsPreload=true"
+      - "traefik.http.middlewares.custom.headers.stsSeconds=315360000"
     networks:
       - traefik_proxy
     ports:
