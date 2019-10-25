@@ -6,10 +6,19 @@ tutorial and
 [this](https://github.com/htpcBeginner/AtoMiC-ToolKit-Docker)
 project.
 
+**Note:**
+Since the time that the above mentioned resources were authored,
+Traefik has undergone a _huge_ change from `1.7` to `2.0`.
+Virtually everything about Traefik configuration changed in this major version update.
+Be sure to read Traefik's
+[documentation](https://docs.traefik.io/)
+and look closely at the `docker-compose.yml` file in this project.
+
 ## Prerequisites
 
 *   [Docker](https://docs.docker.com/install/)
 *   [Docker Compose](https://docs.docker.com/compose/install/)
+*   A domain provided by [Cloudflare](https://www.cloudflare.com/)
 *   A linux box to deploy to ;)
 
 ## Up and Running
@@ -36,44 +45,14 @@ project.
     ```sh
     # Example: .env file
 
-    CLOUDFLARE_API_KEY=mycloudflareapikey
-    CLOUDFLARE_API_EMAIL=admin@domain.com
-    DOMAINNAME=domain.com
-    HTTP_USERNAME=admin
-    HTTP_PASSWORD=mysuperstrongpassword
-    PUID=1000
-    PGID=999
-    TZ=America/Los_Angeles
+    CF_API_KEY=mycloudflareapikey
+    CF_API_EMAIL=admin@domain.com
     ```
 
-1.  Create "acme.json".
+1.  Create "acme.json" and restrict file permissions.
 
     ```sh
-    mkdir acme && touch acme/acme.json && chmod 600 acme/acme.json
-    ```
-
-1.  Create the traefik config file and modify with your information.
-
-    ```sh
-    cp config/traefik.example config/traefik.toml
-    ```
-
-    ```sh
-    # Example: config/traefik.toml file
-    # Replace these values in "quotes" with your information.
-
-    ...
-    [acme]
-    email = "admin@email.com"
-    ...
-    [[acme.domains]]
-      main = "mydomain.com"
-    [[acme.domains]]
-      main = "*.mydomain.com"
-    ...
-    [docker]
-    ...
-    domain = "mydomain.com"
+    touch letsencrypt/acme.json && chmod 600 letsencrypt/acme.json
     ```
 
 1.  Create the docker network.
@@ -92,7 +71,8 @@ project.
     run the following command:
 
     ```sh
-    docker-compose logs -tf --tail="50" traefik
+    tail -f log/accessLog.txt
+    tail -v log/traefik.log
     ```
 
 If all went well,
