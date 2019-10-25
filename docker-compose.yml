@@ -21,6 +21,8 @@ services:
     image: traefik:v2.0
     labels:
       - "traefik.enable=true"
+    networks:
+      - traefik_proxy
     ports:
       - "80:80"
       - "443:443"
