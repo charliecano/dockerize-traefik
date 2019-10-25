@@ -2,49 +2,46 @@ version: "3.7"
 
 services:
   traefik:
+    command:
+      - "--api=true"
+      - "--api.dashboard=false"
+      - "--providers.docker=true"
+      - "--providers.docker.network=traefik_proxy"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.dnschallenge.provider=cloudflare"
+      - "--certificatesresolvers.letsencrypt.acme.email=${CF_API_EMAIL}"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme/acme.json"
     container_name: traefik
-    domainname: ${DOMAINNAME}
     environment:
-      CLOUDFLARE_EMAIL: ${CLOUDFLARE_EMAIL}
-      CLOUDFLARE_API_KEY: ${CLOUDFLARE_API_KEY}
-    hostname: traefik
-    image: traefik:v1.7.18
+      - "CF_API_EMAIL=${CF_API_EMAIL}"
+      - "CF_API_KEY=${CF_API_KEY}"
+    image: traefik:v2.0
     labels:
-      traefik.enable: "true"
-      traefik.backend: traefik
-      traefik.protocol: http
-      traefik.port: 8080
-      traefik.frontend.rule: Host:traefik.${DOMAINNAME}
-      traefik.frontend.headers.SSLHost: traefik.${DOMAINNAME}
-      traefik.docker.network: traefik_proxy
-      traefik.frontend.passHostHeader: "true"
-      traefik.frontend.headers.SSLForceHost: "true"
-      traefik.frontend.headers.SSLRedirect: "true"
-      traefik.frontend.headers.browserXSSFilter: "true"
-      traefik.frontend.headers.contentTypeNosniff: "true"
-      traefik.frontend.headers.forceSTSHeader: "true"
-      traefik.frontend.headers.STSSeconds: 315360000
-      traefik.frontend.headers.STSIncludeSubdomains: "true"
-      traefik.frontend.headers.STSPreload: "true"
-      traefik.frontend.headers.customResponseHeaders: X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
-      traefik.frontend.headers.frameDeny: "true"
-      traefik.frontend.headers.customFrameOptionsValue: allow-from https:${DOMAINNAME}
-      traefik.frontend.auth.basic.users: ${HTTP_USERNAME}:${HTTP_PASSWORD}
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.custom.headers.browserXSSFilter=true"
+      - "traefik.http.middlewares.custom.headers.contentTypeNosniff=true"
+      - "traefik.http.middlewares.custom.headers.forceSTSHeader=true"
+      - "traefik.http.middlewares.custom.headers.frameDeny=true"
+      - "traefik.http.middlewares.custom.headers.sslredirect=true"
+      - "traefik.http.middlewares.custom.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.custom.headers.stsPreload=true"
+      - "traefik.http.middlewares.custom.headers.stsSeconds=315360000"
     networks:
-      - default
       - traefik_proxy
     ports:
       - "80:80"
       - "443:443"
-    restart: always
+    restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ${USERDIR}/docker/traefik:/etc/traefik
-      - ${USERDIR}/docker/shared:/shared
+      - ./letsencrypt:/etc/traefik/acme
+      - ./log:/etc/traefik/log
+      - /var/run/docker.sock:/var/run/docker.sock
 
 networks:
   default:
     driver: bridge
   traefik_proxy:
-    external:
-      name: traefik_proxy
+    external: true

@@ -1,6 +1,4 @@
-acme/acme.json
-config/rules.toml
-config/rules.yml
-config/traefik.toml
-config/traefik.yml
+letsencrypt/acme.json
+config/*.toml
+config/*.yml
 .env
