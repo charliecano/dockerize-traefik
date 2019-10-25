@@ -6,6 +6,7 @@ services:
       - "--api=true"
       - "--api.dashboard=false"
       - "--providers.docker=true"
+      - "--providers.docker.network=traefik_proxy"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
       - "--entrypoints.websecure.address=:443"
@@ -28,12 +29,3 @@ services:
       - ./letsencrypt:/etc/traefik/acme
       - ./log:/etc/traefik/log
       - /var/run/docker.sock:/var/run/docker.sock
-
-  # whoami:
-  #   container_name: "simple-service"
-  #   image: "containous/whoami"
-  #   labels:
-  #     - "traefik.enable=true"
-  #     - "traefik.http.routers.whoami.rule=Host(`whoami.${DOMAIN_NAME}`)"
-  #     - "traefik.http.routers.whoami.entrypoints=websecure"
-  #     - "traefik.http.routers.whoami.tls.certresolver=letsencrypt"
