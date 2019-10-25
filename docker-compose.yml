@@ -29,3 +29,9 @@ services:
       - ./letsencrypt:/etc/traefik/acme
       - ./log:/etc/traefik/log
       - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  default:
+    driver: bridge
+  traefik_proxy:
+    external: true
