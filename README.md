@@ -47,6 +47,14 @@ and look closely at the `docker-compose.yml` file in this project.
 
     CF_API_KEY=mycloudflareapikey
     CF_API_EMAIL=admin@domain.com
+    DOMAIN_NAME=domain.com
+    ```
+
+1.  Generate a user/password hash with `htpasswd` and store the output in `config/usersfile`.
+    Be sure to replace "user" and "password" with your own username and password.
+
+    ```sh
+    htpasswd -nb user password >> config/usersfile
     ```
 
 1.  Create "acme.json" and restrict file permissions.

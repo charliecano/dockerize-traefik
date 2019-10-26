@@ -1,4 +1,3 @@
 letsencrypt/acme.json
-config/*.toml
-config/*.yml
+config/usersfile
 .env

@@ -4,7 +4,6 @@ services:
   traefik:
     command:
       - "--api=true"
-      - "--api.dashboard=false"
       - "--providers.docker=true"
       - "--providers.docker.network=traefik_proxy"
       - "--providers.docker.exposedbydefault=false"
@@ -29,6 +28,13 @@ services:
       - "traefik.http.middlewares.custom.headers.stsIncludeSubdomains=true"
       - "traefik.http.middlewares.custom.headers.stsPreload=true"
       - "traefik.http.middlewares.custom.headers.stsSeconds=315360000"
+      # Secure Dashboard
+      - "traefik.http.middlewares.admin.basicauth.usersfile=/etc/traefik/config/usersfile"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.middlewares=admin"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
     networks:
       - traefik_proxy
     ports:
@@ -36,6 +42,7 @@ services:
       - "443:443"
     restart: unless-stopped
     volumes:
+      - ./config:/etc/traefik/config
       - ./letsencrypt:/etc/traefik/acme
       - ./log:/etc/traefik/log
       - /var/run/docker.sock:/var/run/docker.sock
