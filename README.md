@@ -51,10 +51,9 @@ and look closely at the `docker-compose.yml` file in this project.
     ```
 
 1.  Generate a user/password hash with `htpasswd` and store the output in `config/usersfile`.
-    Be sure to replace "user" and "password" with your own username and password.
 
     ```sh
-    htpasswd -nb user password >> config/usersfile
+    htpasswd -nB $USER
     ```
 
 1.  Create "acme.json" and restrict file permissions.
